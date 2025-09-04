@@ -4,7 +4,7 @@ import { db } from '../db.js';
 const router = Router();
 
 router.get('/', (req, res) => {
-  const transactions = db.transactions;
+  const transactions = db.data.transactions;
 
   const income = transactions.reduce((total: number, transaction: any) => {
     return total + (transaction.amount > 0 ? transaction.amount : 0);
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
       return total + (transaction.amount <= 0 ? transaction.amount : 0);
     }, 0) * -1;
 
-  const pots = db.pots;
+  const pots = db.data.pots;
   const moneyInPots = pots.reduce((total: number, pot: any) => {
     return total + pot.total;
   }, 0);

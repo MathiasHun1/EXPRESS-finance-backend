@@ -1,23 +1,21 @@
-import { Router } from 'express';
+import { Router, type Request, type Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db.js';
+import { transactionsParser } from '../utils/index.js';
+import type { TransactionModel } from '../models/index.js';
 
 const router = Router();
 
 router.get('/', (req, res) => {
-  res.json(db.transactions);
+  res.json(db.data.transactions);
 });
 
-router.post('/', (req, res) => {
-  const { name, category, amount, recurring } = req.body;
+router.post('/', transactionsParser, (req: Request<unknown, unknown, TransactionModel>, res: Response) => {
+  const { name, category, amount, recurring, avatar } = req.body;
 
-  // Basic validation
-  if (!name || !category || amount == null || recurring == null) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-
-  const newTransaction = {
+  const newTransaction: TransactionModel = {
     name,
+    avatar,
     category,
     amount,
     recurring,
@@ -25,7 +23,7 @@ router.post('/', (req, res) => {
     date: new Date().toISOString(),
   };
 
-  db.transactions.push(newTransaction);
+  db.data.transactions.push(newTransaction);
   res.status(201).json(newTransaction);
 });
 

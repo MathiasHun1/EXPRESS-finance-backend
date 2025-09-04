@@ -1,10 +1,10 @@
 # Step 1 - Define Resources
 
-- Transactions
-- Budgets
-- Pots
+- Transactions ✅
+- Budgets ✅
+- Pots ✅
 
-* Budgets will be derived from Transactions
+* Budgets will be derived from Transactions ✅
 
 # Step 2 - Define API endpoints
 
@@ -50,3 +50,11 @@ Balance
 - /budgets/summary → show used vs. max per category
 - /pots/summary → show progress toward goals
 - Recurring transactions: automatically generate upcoming items
+
+### Actual tasks
+
+- Check if a transaction / pot can be made (sufficient funds)
+- Type requests and responses
+- Add error handling
+- Add logging
+- Add integration tests
