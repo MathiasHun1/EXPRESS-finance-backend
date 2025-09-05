@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { newPotModel, PotModel } from '../models/index.js';
+import type { newPotModel, PotModel } from '../types/index.js';
 import * as z from 'zod';
 import { ZodError } from 'zod/v3';
 

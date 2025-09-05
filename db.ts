@@ -1,5 +1,5 @@
 import fs from 'fs';
-import type { BudgetModel, PotModel, TransactionModel } from './models/index.js';
+import type { BudgetModel, PotModel, TransactionModel } from './types/index.js';
 
 interface Database {
   budgets: BudgetModel[];

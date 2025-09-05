@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db.js';
 import { newPotParser, updatedPotParser } from '../utils/index.js';
-import type { newPotModel, PotModel } from '../models/index.js';
+import type { newPotModel, PotModel } from '../types/index.js';
 
 const router = Router();
 

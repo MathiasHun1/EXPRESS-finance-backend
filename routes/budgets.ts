@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db.js';
 import { budgetParser } from '../utils/index.js';
-import type { BudgetModel, newBudgetModel } from '../models/index.js';
+import type { BudgetModel, newBudgetModel } from '../types/index.js';
 
 const router = Router();
 
