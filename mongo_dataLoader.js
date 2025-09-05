@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import fs from 'fs';
 dotenv.config();
-const url = process.env.MONGODB_URI;
+const url = process.env.MONGODB_URI_DEV;
 const data = JSON.parse(fs.readFileSync('data/data.json'));
 
 // ------------- Schema definitions -----------------//
@@ -165,6 +165,6 @@ const getData = async () => {
 
 // ------------- Run one of them -----------------//
 
-// deleteData();
+deleteData();
 // getData();
 // uploadData();

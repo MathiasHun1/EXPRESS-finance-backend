@@ -1,7 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { newPotModel, PotModel } from '../types/index.js';
+import { Error as MongooseError } from 'mongoose';
 import * as z from 'zod';
-import { ZodError } from 'zod/v3';
 
 export const newPotParser = (req: Request, res: Response, next: NextFunction) => {
   const potSchema = z.object({
@@ -69,7 +68,10 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
   if (err instanceof z.ZodError) {
     return res.status(400).send(err.issues);
   }
-  console.log('runs');
+
+  if (err instanceof MongooseError.CastError) {
+    return res.status(400).send(err.message);
+  }
 
   return res.status(500).send(err.message);
 };

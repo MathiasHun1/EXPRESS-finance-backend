@@ -1,28 +1,20 @@
-import express from 'express';
-import cors from 'cors';
-import transactionsRouter from './routes/transactions.js';
-import budgetsRouter from './routes/budgets.js';
-import potsRouter from './routes/pots.js';
-import balanceRouter from './routes/balance.js';
-import { errorHandler } from './utils/index.js';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import app from './app.js';
+import Budget from './models/budget.js';
 
+dotenv.config();
+const url = process.env.MONGODB_URI_DEV;
 const PORT = process.env.PORT || 3000;
-const app = express();
 
-app.use(cors());
-app.use(express.json());
+app.listen(PORT, async () => {
+  console.log('Server is running on PORT: ', PORT);
+  console.log('Connecting to databas..');
 
-// See if the server is running
-app.get('/ping', (req, res) => {
-  res.send('ping');
-});
-
-app.use('/transactions', transactionsRouter);
-app.use('/budgets', budgetsRouter);
-app.use('/pots', potsRouter);
-app.use('/balance', balanceRouter);
-app.use(errorHandler);
-
-app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT} `);
+  try {
+    await mongoose.connect(url!);
+    console.log('connected to mongoDb');
+  } catch (error) {
+    console.error(error);
+  }
 });

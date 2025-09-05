@@ -1,15 +1,11 @@
-export interface newPotModel {
+export interface PotModel {
   name: string;
   target: number;
   total: number;
   theme: string;
 }
 
-export interface PotModel extends newPotModel {
-  id: string;
-}
-
-export interface newTransactionModel {
+export interface TransactionModel {
   avatar: string;
   name: string;
   category: string;
@@ -18,26 +14,14 @@ export interface newTransactionModel {
   recurring: boolean;
 }
 
-export interface TransactionModel extends newTransactionModel {
-  id: string;
-}
-
-export interface newBudgetModel {
+export interface BudgetModel {
   category: string;
   maximum: number;
   theme: string;
 }
 
-export interface BudgetModel extends newBudgetModel {
-  id: string;
-}
-
-export interface newBalanceModel {
+export interface BalanceModel {
   current: number;
   income: number;
   expenses: number;
-}
-
-export interface BalanceModel extends newBalanceModel {
-  id: string;
 }

@@ -1,18 +1,18 @@
 import { Router, type Request, type Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import { db } from '../db.js';
-import { budgetParser } from '../utils/index.js';
-import type { BudgetModel, newBudgetModel } from '../types/index.js';
+import { budgetParser } from '../middlewares/index.js';
+import type { BudgetModel } from '../types/index.js';
+import Budget from '../models/budget.js';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.json(db.data.budgets);
+router.get('/', async (req, res) => {
+  const data = await Budget.find({});
+  res.json(data);
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const budget = db.findBudgetById(id);
+  const budget = await Budget.findById(id);
 
   if (!budget) {
     return res.status(404).json({ error: 'Budget not found' });
@@ -21,33 +21,26 @@ router.get('/:id', (req, res) => {
   res.send(budget);
 });
 
-router.post('/', budgetParser, (req: Request<unknown, unknown, newBudgetModel>, res: Response) => {
-  const newBudget: BudgetModel = {
-    ...req.body,
-    id: uuidv4(),
-  };
+router.post('/', budgetParser, async (req: Request<unknown, unknown, BudgetModel>, res: Response) => {
+  const newBudget = new Budget(req.body);
+  const result = await newBudget.save();
 
-  db.saveBudget(newBudget);
-  res.status(201).json(newBudget);
+  res.status(201).json(result);
 });
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id;
 
-  if (!db.deleteBudget(id)) {
-    return res.status(404).json({ error: 'Budget not found' });
-  }
+  await Budget.findByIdAndDelete(id);
 
   res.status(204).send();
 });
 
-router.put('/:id', (req: Request<{ id: string }, unknown, BudgetModel>, res) => {
+router.put('/:id', async (req: Request<{ id: string }, unknown, BudgetModel>, res) => {
   const { id } = req.params;
+  const updatedBudget = req.body;
 
-  const updatedBudget = { ...req.body, id };
-  if (!db.updateBudget(updatedBudget)) {
-    return res.status(404).json({ error: 'Budget not found' });
-  }
+  await Budget.findByIdAndUpdate(id, updatedBudget);
 
   res.json(updatedBudget);
 });

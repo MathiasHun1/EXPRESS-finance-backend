@@ -1,46 +1,47 @@
 import { Router, type Request, type Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db.js';
-import { newPotParser, updatedPotParser } from '../utils/index.js';
-import type { newPotModel, PotModel } from '../types/index.js';
+import { newPotParser, updatedPotParser } from '../middlewares/index.js';
+import type { PotModel } from '../types/index.js';
+import Pot from '../models/pot.js';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.json(db.data.pots);
+router.get('/', async (req, res) => {
+  const pots = await Pot.find({});
+  res.send(pots);
 });
 
-router.get('/:id', (req, res) => {
-  const pot = db.data.pots.find((p) => p.id === req.params.id);
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+
+  const pot = await Pot.findById(id);
+
   if (!pot) {
     return res.status(404).json({ error: 'Pot not found' });
   }
   res.json(pot);
 });
 
-router.post('/', newPotParser, (req: Request<unknown, unknown, newPotModel>, res: Response<PotModel>) => {
-  const newPot: PotModel = { ...req.body, total: 0, id: uuidv4() };
+router.post('/', newPotParser, async (req: Request<unknown, unknown, PotModel>, res: Response<PotModel>) => {
+  const newPot = new Pot({ ...req.body, total: 0 });
+  await newPot.save();
 
-  db.savePot(newPot);
   res.status(201).send(newPot);
 });
 
-router.put('/:id', updatedPotParser, (req: Request<{ id: string }, unknown, PotModel>, res: any) => {
+router.put('/:id', updatedPotParser, async (req: Request<{ id: string }, unknown, PotModel>, res: any) => {
   const id = req.params.id;
-  const updatedPot = req.body;
-  updatedPot.id = id;
+  const updatedData = req.body;
 
-  db.updatePot(updatedPot);
+  const updatedPot = await Pot.findByIdAndUpdate(id, updatedData);
 
   res.status(201).send(updatedPot);
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const id = req.params.id;
+  await Pot.findByIdAndDelete(id);
 
-  if (!db.deletePot(id)) {
-    return res.status(400).json({ error: 'Pot not found' });
-  }
   res.status(204).send();
 });
 

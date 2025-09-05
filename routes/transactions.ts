@@ -1,30 +1,40 @@
 import { Router, type Request, type Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import { db } from '../db.js';
-import { transactionsParser } from '../utils/index.js';
+import { transactionsParser } from '../middlewares/index.js';
 import type { TransactionModel } from '../types/index.js';
+import Transaction from '../models/transaction.js';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.json(db.data.transactions);
+router.get('/', async (req, res) => {
+  const transactions = await Transaction.find({});
+
+  res.send(transactions);
 });
 
-router.post('/', transactionsParser, (req: Request<unknown, unknown, TransactionModel>, res: Response) => {
-  const { name, category, amount, recurring, avatar } = req.body;
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  const transaction = await Transaction.findById(id);
 
-  const newTransaction: TransactionModel = {
-    name,
-    avatar,
-    category,
-    amount,
-    recurring,
-    id: uuidv4(),
+  res.send(transaction);
+});
+
+router.post('/', transactionsParser, async (req: Request<unknown, unknown, TransactionModel>, res: Response) => {
+  const newtransObject: TransactionModel = {
+    ...req.body,
     date: new Date().toISOString(),
   };
 
-  db.data.transactions.push(newTransaction);
-  res.status(201).json(newTransaction);
+  const newTransaction = new Transaction(newtransObject);
+  const result = await newTransaction.save();
+
+  res.status(201).send(result);
+});
+
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id;
+
+  await Transaction.findByIdAndDelete(id);
+  res.send();
 });
 
 export default router;
