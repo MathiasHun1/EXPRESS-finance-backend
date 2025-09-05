@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 dotenv.config();
 const url = process.env.MONGODB_URI_DEV;
-const data = JSON.parse(fs.readFileSync('data/data.json'));
+const data = JSON.parse(fs.readFileSync('rawData/data.json'));
 
 // ------------- Schema definitions -----------------//
 

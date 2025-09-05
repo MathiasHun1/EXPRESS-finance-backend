@@ -24,6 +24,16 @@ const transactionSchema = new mongoose.Schema({
   },
 });
 
+transactionSchema.set('toJSON', {
+  transform: (document, returnedObj: any) => {
+    const id = returnedObj._id.toString();
+    returnedObj.id = id;
+    delete returnedObj._id;
+    delete returnedObj.__v;
+    return returnedObj;
+  },
+});
+
 const Transaction = mongoose.model('Transaction', transactionSchema);
 
 export default Transaction;

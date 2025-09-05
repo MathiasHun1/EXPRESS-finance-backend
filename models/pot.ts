@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import type { PotModel } from '../types/index.js';
 
-const potSchema = new mongoose.Schema({
+const potSchema = new mongoose.Schema<PotModel>({
   name: {
     type: String,
     required: true,
@@ -18,6 +19,16 @@ const potSchema = new mongoose.Schema({
   theme: {
     type: String,
     required: true,
+  },
+});
+
+potSchema.set('toJSON', {
+  transform: (document, returnedObj: any) => {
+    const id = returnedObj._id.toString();
+    returnedObj.id = id;
+    delete returnedObj._id;
+    delete returnedObj.__v;
+    return returnedObj;
   },
 });
 

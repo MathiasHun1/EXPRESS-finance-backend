@@ -15,6 +15,16 @@ const budgetSchema = new mongoose.Schema({
   },
 });
 
+budgetSchema.set('toJSON', {
+  transform: (document, returnedObj: any) => {
+    const id = returnedObj._id.toString();
+    returnedObj.id = id;
+    delete returnedObj._id;
+    delete returnedObj.__v;
+    return returnedObj;
+  },
+});
+
 const Budget = mongoose.model('Budget', budgetSchema);
 
 export default Budget;

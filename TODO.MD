@@ -45,6 +45,8 @@ Balance
 
 # Step 3 - Possible Enhancements
 
+- user management: multi-user support ‼️
+- Authentication & Authorization: secure endpoints ‼️
 - Filtering & aggregation:
   /transactions?from=2024-08-01&to=2024-08-31
 - /budgets/summary → show used vs. max per category

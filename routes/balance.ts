@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { db } from '../db.js';
+import Transaction from '../models/transaction.js';
+import Pot from '../models/pot.js';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  const transactions = db.data.transactions;
+router.get('/', async (req, res) => {
+  const transactions = await Transaction.find({});
 
   const income = transactions.reduce((total: number, transaction: any) => {
     return total + (transaction.amount > 0 ? transaction.amount : 0);
@@ -15,7 +16,7 @@ router.get('/', (req, res) => {
       return total + (transaction.amount <= 0 ? transaction.amount : 0);
     }, 0) * -1;
 
-  const pots = db.data.pots;
+  const pots = await Pot.find({});
   const moneyInPots = pots.reduce((total: number, pot: any) => {
     return total + pot.total;
   }, 0);

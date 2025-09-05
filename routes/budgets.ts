@@ -40,7 +40,7 @@ router.put('/:id', async (req: Request<{ id: string }, unknown, BudgetModel>, re
   const { id } = req.params;
   const updatedBudget = req.body;
 
-  await Budget.findByIdAndUpdate(id, updatedBudget);
+  await Budget.findByIdAndUpdate(id, updatedBudget, { returnDocument: 'after' });
 
   res.json(updatedBudget);
 });

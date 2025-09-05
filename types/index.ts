@@ -3,6 +3,7 @@ export interface PotModel {
   target: number;
   total: number;
   theme: string;
+  id: string;
 }
 
 export interface TransactionModel {

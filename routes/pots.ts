@@ -1,5 +1,4 @@
 import { Router, type Request, type Response } from 'express';
-import { db } from '../db.js';
 import { newPotParser, updatedPotParser } from '../middlewares/index.js';
 import type { PotModel } from '../types/index.js';
 import Pot from '../models/pot.js';
@@ -33,7 +32,7 @@ router.put('/:id', updatedPotParser, async (req: Request<{ id: string }, unknown
   const id = req.params.id;
   const updatedData = req.body;
 
-  const updatedPot = await Pot.findByIdAndUpdate(id, updatedData);
+  const updatedPot = await Pot.findByIdAndUpdate(id, updatedData, { returnDocument: 'after' });
 
   res.status(201).send(updatedPot);
 });
