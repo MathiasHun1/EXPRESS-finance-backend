@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { Error as MongooseError } from 'mongoose';
 import * as z from 'zod';
+import type { TransactionModel } from '../types/index.js';
 
 export const newPotParser = (req: Request, res: Response, next: NextFunction) => {
   const potSchema = z.object({
@@ -50,6 +51,7 @@ export const budgetParser = (req: Request, res: Response, next: NextFunction) =>
 
 export const transactionsParser = (req: Request, res: Response, next: NextFunction) => {
   const transactionSchema = z.object({
+    avatar: z.string(),
     name: z.string(),
     category: z.string(),
     amount: z.number(),
@@ -57,7 +59,8 @@ export const transactionsParser = (req: Request, res: Response, next: NextFuncti
   });
 
   try {
-    transactionSchema.parse(req.body);
+    const parsed: Omit<TransactionModel, 'date'> = transactionSchema.parse(req.body);
+    req.body = parsed;
     next();
   } catch (error) {
     next(error);
@@ -74,4 +77,14 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
   }
 
   return res.status(500).send(err.message);
+};
+
+export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
+  console.log('METHOD: ', req.method);
+
+  if (req.body) {
+    console.log('BODY: ', req.body);
+  }
+
+  next();
 };

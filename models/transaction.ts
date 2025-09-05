@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
 
 const transactionSchema = new mongoose.Schema({
-  avatar: String,
+  avatar: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,

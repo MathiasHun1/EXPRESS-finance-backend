@@ -2,6 +2,8 @@ import { Router, type Request, type Response } from 'express';
 import { newPotParser, updatedPotParser } from '../middlewares/index.js';
 import type { PotModel } from '../types/index.js';
 import Pot from '../models/pot.js';
+import Transaction from '../models/transaction.js';
+import { calculateBalance } from '../utils/index.js';
 
 const router = Router();
 
@@ -30,7 +32,22 @@ router.post('/', newPotParser, async (req: Request<unknown, unknown, PotModel>, 
 
 router.put('/:id', updatedPotParser, async (req: Request<{ id: string }, unknown, PotModel>, res: any) => {
   const id = req.params.id;
+  const oldData = await Pot.findById(id);
   const updatedData = req.body;
+
+  const transactions = await Transaction.find({});
+  const pots = await Pot.find({});
+  const balance = calculateBalance(transactions, pots);
+
+  // check if user have enough balance for operation
+  let amount: number = 0;
+
+  if (oldData && updatedData) {
+    amount = updatedData.total - oldData.total;
+  }
+  if (balance.current - amount < 0) {
+    return res.status(400).json({ error: 'Insufficient funds!' });
+  }
 
   const updatedPot = await Pot.findByIdAndUpdate(id, updatedData, { returnDocument: 'after' });
 

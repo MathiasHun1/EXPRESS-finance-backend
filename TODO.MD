@@ -55,8 +55,9 @@ Balance
 
 ### Actual tasks
 
-- Check if a transaction / pot can be made (sufficient funds)
-- Type requests and responses
-- Add error handling
-- Add logging
+- Check if a pot addition can be made (insufficient funds) ✅
+- Type requests and responses ✅
+- Add error handling ✅
+- Add validation ✅
+- Add logging ✅
 - Add integration tests

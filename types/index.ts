@@ -10,7 +10,7 @@ export interface TransactionModel {
   avatar: string;
   name: string;
   category: string;
-  date: string;
+  date: Date;
   amount: number;
   recurring: boolean;
 }
