@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', transactionsParser, async (req: Request<unknown, unknown, TransactionModel>, res: Response) => {
   const newtransObject: TransactionModel = {
     ...req.body,
-    date: new Date().toISOString(),
+    date: new Date(),
   };
 
   const newTransaction = new Transaction(newtransObject);
