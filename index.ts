@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import app from './app.js';
-import Budget from './models/budget.js';
 
 dotenv.config();
 const url = process.env.MONGODB_URI_DEV;
