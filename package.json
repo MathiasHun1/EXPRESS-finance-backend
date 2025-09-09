@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "dev": "tsx --watch ./index.ts",
-    "start": "tsx ./index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "NODE_ENV=development tsx --watch ./index.ts",
+    "start": " tsx ./index.ts",
+    "test": "NODE_ENV=test node --import tsx --test tests/**/*test.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,12 +16,15 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.4",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "dependencies": {
     "@types/mongoose": "^5.11.96",
     "cors": "^2.8.5",
+    "cross-env": "^10.0.0",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "mongoose": "^8.18.0",

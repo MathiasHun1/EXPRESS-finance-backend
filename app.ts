@@ -5,8 +5,19 @@ import budgetsRouter from './routes/budgets.js';
 import potsRouter from './routes/pots.js';
 import balanceRouter from './routes/balance.js';
 import { errorHandler, requestLogger } from './middlewares/index.js';
+import mongoose from 'mongoose';
+import config from './utils/config.js';
 
-const PORT = process.env.PORT || 3000;
+console.log('Environment: ', process.env.NODE_ENV);
+
+try {
+  console.log('Connecting to database..');
+  await mongoose.connect(config.MONGODB_URI!);
+  console.log('Connected to database!');
+} catch (error) {
+  console.log('Error connecting Database!');
+}
+
 const app = express();
 
 app.use(cors());
