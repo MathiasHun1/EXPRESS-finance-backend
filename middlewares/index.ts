@@ -56,10 +56,26 @@ export const transactionsParser = (req: Request, res: Response, next: NextFuncti
     category: z.string(),
     amount: z.number(),
     recurring: z.boolean(),
+    userId: z.string(),
   });
 
   try {
     const parsed: Omit<TransactionModel, 'date'> = transactionSchema.parse(req.body);
+    req.body = parsed;
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const newUserParser = (req: Request, res: Response, next: NextFunction) => {
+  const userSchema = z.object({
+    username: z.string(),
+    password: z.string(),
+  });
+
+  try {
+    const parsed = userSchema.parse(req.body);
     req.body = parsed;
     next();
   } catch (error) {
@@ -76,7 +92,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
     return res.status(400).send(err.message);
   }
 
-  return res.status(500).send(err.message);
+  return res.status(500).json({ error: err });
 };
 
 export const requestLogger = (req: Request, res: Response, next: NextFunction) => {

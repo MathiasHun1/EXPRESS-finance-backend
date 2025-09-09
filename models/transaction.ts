@@ -25,11 +25,15 @@ const transactionSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+  },
 });
 
 transactionSchema.set('toJSON', {
   transform: (document, returnedObj: any) => {
-    const id = returnedObj._id.toString();
+    const id: string = returnedObj._id.toString();
     returnedObj.id = id;
     delete returnedObj._id;
     delete returnedObj.__v;

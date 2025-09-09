@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import fs from 'fs';
 dotenv.config();
-const url = process.env.MONGODB_URI_DEV;
-const data = JSON.parse(fs.readFileSync('rawData/data.json'));
+const url = process.env.MONGODB_URI;
+const data = JSON.parse(fs.readFileSync('data.json'));
 
 // ------------- Schema definitions -----------------//
 

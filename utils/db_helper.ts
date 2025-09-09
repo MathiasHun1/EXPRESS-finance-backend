@@ -2,6 +2,8 @@ import User from '../models/user.js';
 import Transaction from '../models/transaction.js';
 import Pot from '../models/pot.js';
 import Budget from '../models/budget.js';
+import type { UserModel } from '../types/index.js';
+import bcrypt from 'bcrypt';
 
 const clearDb = async () => {
   await User.deleteMany({});
@@ -9,6 +11,46 @@ const clearDb = async () => {
   await Pot.deleteMany({});
   await Budget.deleteMany({});
 };
+
+const loadTestData = async () => {
+  const user = initialUsers[0];
+  if (!user) {
+    return console.error('No user found');
+  }
+
+  // Create a new user and save to db
+  const passwordHash = await bcrypt.hash(user.password, 10);
+  const userAtStart = new User({
+    username: user.username,
+    passwordHash,
+  });
+
+  const savedUser = await userAtStart.save();
+
+  // Save the transactions and save them to db
+  const transactionPromises: any[] = [];
+  initialTransactions.forEach((trans) => {
+    const newTransaction = new Transaction({ ...trans, userId: savedUser.id }); // Join user Id to the transaction
+    transactionPromises.push(newTransaction.save());
+  });
+
+  const savedTransactions = await Promise.all(transactionPromises);
+
+  // Join the transaction id's to the user
+  savedTransactions.forEach((t) => {
+    savedUser.transactions.push(t.id);
+  });
+
+  // Save the User
+  await savedUser.save();
+};
+
+const initialUsers = [
+  {
+    username: 'Lajos',
+    password: 'valami',
+  },
+];
 
 const initialTransactions = [
   {
@@ -47,5 +89,6 @@ const initialTransactions = [
 
 export default {
   clearDb,
+  loadTestData,
   initialTransactions,
 };

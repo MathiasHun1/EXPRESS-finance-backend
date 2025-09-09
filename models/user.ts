@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
-  userName: {
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -28,6 +28,13 @@ const UserSchema = new mongoose.Schema({
       ref: 'Pot',
     },
   ],
+});
+
+UserSchema.set('toJSON', {
+  transform: (doc, returnedObj: any) => {
+    (returnedObj.id = returnedObj._id), delete returnedObj._id;
+    delete returnedObj.__v;
+  },
 });
 
 const User = mongoose.model('User', UserSchema);

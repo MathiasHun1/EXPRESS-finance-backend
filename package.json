@@ -5,15 +5,16 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "dev": "NODE_ENV=development tsx --watch ./index.ts",
+    "dev": "NODE_ENV=test tsx --watch ./index.ts",
     "start": " tsx ./index.ts",
-    "test": "NODE_ENV=test node --import tsx --test tests/**/*test.ts"
+    "test": "NODE_ENV=test node --import tsx --test tests/users.api.test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/supertest": "^6.0.3",
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "@types/mongoose": "^5.11.96",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "cross-env": "^10.0.0",
     "dotenv": "^17.2.2",

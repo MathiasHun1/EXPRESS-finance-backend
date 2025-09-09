@@ -13,6 +13,7 @@ export interface TransactionModel {
   date: Date;
   amount: number;
   recurring: boolean;
+  userId: string;
 }
 
 export interface BudgetModel {
@@ -25,4 +26,12 @@ export interface BalanceModel {
   current: number;
   income: number;
   expenses: number;
+}
+
+export interface UserModel {
+  username: string;
+  passwordHash: string;
+  transactions: string[];
+  budgets: string[];
+  pots: string[];
 }
