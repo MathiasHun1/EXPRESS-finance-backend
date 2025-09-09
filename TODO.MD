@@ -60,4 +60,4 @@ Balance
 - Add error handling ✅
 - Add validation ✅
 - Add logging ✅
-- Add integration tests
+- Integration tests for routes: budgets, pots

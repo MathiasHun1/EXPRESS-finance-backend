@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
 
-  const user = await User.findById(id).populate('transactions');
+  const user = await User.findById(id).populate('transactions').populate('budgets').populate('pots');
   res.send(user);
 });
 

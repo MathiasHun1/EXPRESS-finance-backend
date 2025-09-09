@@ -18,7 +18,8 @@ const loadTestData = async () => {
     return console.error('No user found');
   }
 
-  // Create a new user and save to db
+  /*-------- Create and save a new user to db -------*/
+
   const passwordHash = await bcrypt.hash(user.password, 10);
   const userAtStart = new User({
     username: user.username,
@@ -27,7 +28,7 @@ const loadTestData = async () => {
 
   const savedUser = await userAtStart.save();
 
-  // Save the transactions and save them to db
+  /*-------- Save the transactions and save them to db -------*/
   const transactionPromises: any[] = [];
   initialTransactions.forEach((trans) => {
     const newTransaction = new Transaction({ ...trans, userId: savedUser.id }); // Join user Id to the transaction
@@ -41,7 +42,33 @@ const loadTestData = async () => {
     savedUser.transactions.push(t.id);
   });
 
-  // Save the User
+  /*-------- Save the budgets and save them to db -------*/
+  const budgetPromises: any[] = [];
+  initialBudgets.forEach((budget) => {
+    const newBudget = new Budget({ ...budget, userId: savedUser.id }); // Join user Id to the transaction
+    budgetPromises.push(newBudget.save());
+  });
+
+  const savedBudgets = await Promise.all(budgetPromises);
+  // Join the transaction id's to the user
+  savedBudgets.forEach((b) => {
+    savedUser.budgets.push(b.id);
+  });
+
+  /*-------- Save the post and save them to db -------*/
+  const potPromises: any[] = [];
+  initialPots.forEach((pot) => {
+    const newPot = new Pot({ ...pot, userId: savedUser.id }); // Join user Id to the transaction
+    potPromises.push(newPot.save());
+  });
+
+  const savedPots = await Promise.all(potPromises);
+  // Join the transaction id's to the user
+  savedPots.forEach((p) => {
+    savedUser.pots.push(p.id);
+  });
+
+  /*-------- Save the user -------*/
   await savedUser.save();
 };
 
@@ -84,6 +111,57 @@ const initialTransactions = [
     date: '2024-08-17T16:12:05Z',
     amount: 120.0,
     recurring: false,
+  },
+];
+
+const initialBudgets = [
+  {
+    category: 'Entertainment',
+    maximum: 50.0,
+    theme: '#277C78',
+  },
+  {
+    category: 'Bills',
+    maximum: 750.0,
+    theme: '#82C9D7',
+  },
+  {
+    category: 'Dining Out',
+    maximum: 75.0,
+    theme: '#F2CDAC',
+  },
+];
+
+const initialPots = [
+  {
+    name: 'Savings',
+    target: 2000.0,
+    total: 159.0,
+    theme: '#277C78',
+  },
+  {
+    name: 'Concert Ticket',
+    target: 150.0,
+    total: 110.0,
+    theme: '#626070',
+  },
+  {
+    name: 'Gift',
+    target: 150.0,
+    total: 110.0,
+    theme: '#82C9D7',
+  },
+  {
+    name: 'New Laptop',
+    target: 1000.0,
+    total: 10.0,
+    theme: '#F2CDAC',
+  },
+  {
+    name: 'Holiday',
+    target: 1440.0,
+    total: 531.0,
+    theme: '#826CB0',
   },
 ];
 

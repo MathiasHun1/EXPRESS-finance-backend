@@ -15,7 +15,7 @@ describe('users API test', () => {
     await dbHelper.loadTestData();
   });
 
-  test('Get user succesfully', async () => {
+  test('Get users succesfully', async () => {
     const user = await User.findOne({});
 
     const result = await api.get('/users').expect(200);
@@ -26,9 +26,9 @@ describe('users API test', () => {
     const usersAtStart = await User.find({});
 
     const resut = await api.post('/users').send({ username: 'Pisti', password: 'akarmi' }).expect(201);
-    const savedUser = resut.body;
+    const savedUser = await User.findById(resut.body.id);
 
-    const passwordCompare = await bcrypt.compare('akarmi', savedUser.passwordHash);
+    const passwordCompare = await bcrypt.compare('akarmi', savedUser!.passwordHash);
     const usersAtEnd = await User.find({});
 
     assert.strictEqual(usersAtStart.length + 1, usersAtEnd.length);

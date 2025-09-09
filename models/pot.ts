@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import type { PotModel } from '../types/index.js';
 
-const potSchema = new mongoose.Schema<PotModel>({
+const potSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -18,6 +18,10 @@ const potSchema = new mongoose.Schema<PotModel>({
   },
   theme: {
     type: String,
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
 });
