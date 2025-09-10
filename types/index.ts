@@ -1,9 +1,11 @@
+import type { Types } from 'mongoose';
+
 export interface PotModel {
   name: string;
   target: number;
   total: number;
   theme: string;
-  userId: string;
+  userId: Types.ObjectId;
 }
 
 export interface TransactionModel {
@@ -13,13 +15,14 @@ export interface TransactionModel {
   date: Date;
   amount: number;
   recurring: boolean;
-  userId: string;
+  userId: Types.ObjectId;
 }
 
 export interface BudgetModel {
   category: string;
   maximum: number;
   theme: string;
+  userId: string;
 }
 
 export interface BalanceModel {

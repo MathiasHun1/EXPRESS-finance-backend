@@ -22,6 +22,12 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', budgetParser, async (req: Request<unknown, unknown, BudgetModel>, res: Response) => {
+  const userId = req.body.userId;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User Id missing!' });
+  }
+
   const newBudget = new Budget(req.body);
   const result = await newBudget.save();
 
@@ -37,12 +43,14 @@ router.delete('/:id', async (req, res) => {
 });
 
 router.put('/:id', async (req: Request<{ id: string }, unknown, BudgetModel>, res) => {
-  const { id } = req.params;
+  const id = req.params.id;
   const updatedBudget = req.body;
 
-  await Budget.findByIdAndUpdate(id, updatedBudget, { returnDocument: 'after' });
+  const returnedBudget = await Budget.findByIdAndUpdate(id, updatedBudget, { returnDocument: 'after' });
 
-  res.json(updatedBudget);
+  console.log('RETURNED: ', returnedBudget);
+
+  res.status(201).send(returnedBudget);
 });
 
 export default router;

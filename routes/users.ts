@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import User from '../models/user.js';
 import type { Request, Response } from 'express';
-import type { UserModel } from '../types/index.js';
 import { newUserParser } from '../middlewares/index.js';
 import bcrypt from 'bcrypt';
 

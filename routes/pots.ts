@@ -23,7 +23,13 @@ router.get('/:id', async (req, res) => {
   res.json(pot);
 });
 
-router.post('/', newPotParser, async (req: Request<unknown, unknown, PotModel>, res: Response<PotModel>) => {
+router.post('/', newPotParser, async (req: Request<unknown, unknown, PotModel>, res: Response) => {
+  const userId = req.body.userId;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User Id missing!' });
+  }
+
   const newPot = new Pot({ ...req.body, total: 0 });
   await newPot.save();
 

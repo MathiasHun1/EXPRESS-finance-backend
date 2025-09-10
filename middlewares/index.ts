@@ -1,13 +1,14 @@
 import type { NextFunction, Request, Response } from 'express';
 import { Error as MongooseError } from 'mongoose';
 import * as z from 'zod';
-import type { TransactionModel } from '../types/index.js';
+import type { BudgetModel, TransactionModel } from '../types/index.js';
 
 export const newPotParser = (req: Request, res: Response, next: NextFunction) => {
   const potSchema = z.object({
     name: z.string(),
     target: z.number().min(0),
     theme: z.string(),
+    userId: z.string(),
   });
 
   try {
@@ -39,10 +40,12 @@ export const budgetParser = (req: Request, res: Response, next: NextFunction) =>
     category: z.string(),
     maximum: z.number().min(0),
     theme: z.string(),
+    userId: z.string(),
   });
 
   try {
-    budgetSchema.parse(req.body);
+    const parsed = budgetSchema.parse(req.body);
+    req.body = parsed;
     next();
   } catch (error) {
     next(error);
@@ -60,7 +63,7 @@ export const transactionsParser = (req: Request, res: Response, next: NextFuncti
   });
 
   try {
-    const parsed: Omit<TransactionModel, 'date'> = transactionSchema.parse(req.body);
+    const parsed = transactionSchema.parse(req.body);
     req.body = parsed;
     next();
   } catch (error) {

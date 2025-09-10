@@ -8,7 +8,6 @@ const router = Router();
 
 router.get('/', async (req, res) => {
   const transactions = await Transaction.find({});
-
   res.send(transactions);
 });
 
@@ -20,6 +19,12 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', transactionsParser, async (req: Request<unknown, unknown, TransactionModel>, res: Response) => {
+  const userId = req.body.userId;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User Id missing!' });
+  }
+
   const newtransObject: TransactionModel = {
     ...req.body,
     date: new Date(),
@@ -32,7 +37,6 @@ router.post('/', transactionsParser, async (req: Request<unknown, unknown, Trans
 
   const newTransaction = new Transaction(newtransObject);
   const savedTransaction = await newTransaction.save();
-
   user.transactions.push(savedTransaction.id);
   await user.save();
 
