@@ -36,8 +36,8 @@ app.get('/ping', (req, res) => {
 
 app.use('/login', loginRouter);
 app.use('/users', usersRouter);
-app.use('/transactions', transactionsRouter);
-app.use('/budgets', budgetsRouter);
+app.use('/transactions', userExtractor, transactionsRouter);
+app.use('/budgets', userExtractor, budgetsRouter);
 app.use('/pots', userExtractor, potsRouter);
 app.use('/balance', balanceRouter);
 app.use(errorHandler);

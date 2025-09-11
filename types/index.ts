@@ -5,7 +5,7 @@ export interface PotModel {
   target: number;
   total: number;
   theme: string;
-  userId: Types.ObjectId;
+  userId: Types.ObjectId | string;
 }
 
 export interface TransactionModel {
@@ -15,7 +15,7 @@ export interface TransactionModel {
   date: Date | string;
   amount: number;
   recurring: boolean;
-  userId: Types.ObjectId;
+  userId: Types.ObjectId | string;
 }
 
 export interface BudgetModel {

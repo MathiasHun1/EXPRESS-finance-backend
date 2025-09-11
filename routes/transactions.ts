@@ -1,44 +1,56 @@
 import { Router, type Request, type Response } from 'express';
 import { transactionsParser } from '../middlewares/index.js';
-import type { TransactionModel } from '../types/index.js';
+import type { TransactionInput, TransactionModel } from '../types/index.js';
 import Transaction from '../models/transaction.js';
 import User from '../models/user.js';
 
 const router = Router();
 
+// --------- Get All
 router.get('/', async (req, res) => {
-  const transactions = await Transaction.find({});
+  const userFromToken = req.user!;
+  const transactions = await Transaction.find({ userId: userFromToken.userId });
+
   res.send(transactions);
 });
 
+// --------- Get one
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
-  const transaction = await Transaction.findById(id).populate('userId');
+  const userFromToken = req.user!;
+
+  const transaction = await Transaction.findById(id);
+  if (!transaction) {
+    return res.status(404).json({ error: 'Pot not found' });
+  }
+
+  if (transaction.userId.toString() !== userFromToken.userId) {
+    return res.status(403).json({ error: 'unauthorized' });
+  }
 
   res.send(transaction);
 });
 
-router.post('/', transactionsParser, async (req: Request<unknown, unknown, TransactionModel>, res: Response) => {
-  const userId = req.body.userId;
-
-  if (!userId) {
-    return res.status(400).json({ error: 'User Id missing!' });
-  }
+// --------- Create new
+router.post('/', transactionsParser, async (req: Request<{}, {}, TransactionInput>, res: Response) => {
+  const userFromToken = req.user!;
 
   const newtransObject: TransactionModel = {
     ...req.body,
     date: new Date(),
+    userId: userFromToken.userId,
   };
-
-  const user = await User.findById(req.body.userId);
-  if (!user) {
-    return res.status(400).json({ error: 'User not found!' });
-  }
 
   const newTransaction = new Transaction(newtransObject);
   const savedTransaction = await newTransaction.save();
-  user.transactions.push(savedTransaction.id);
-  await user.save();
+
+  const owner = await User.findById(userFromToken.userId);
+  if (!owner) {
+    return res.status(500).json({ error: 'Unexpected error finding user' });
+  }
+
+  owner.transactions.push(savedTransaction.id);
+  await owner.save();
 
   res.status(201).send(savedTransaction);
 });

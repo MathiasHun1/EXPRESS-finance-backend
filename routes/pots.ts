@@ -1,13 +1,14 @@
 import { Router, type Request, type Response } from 'express';
 import { newPotParser, updatedPotParser } from '../middlewares/index.js';
-import type { PotModel } from '../types/index.js';
+import type { PotInput, PotModel } from '../types/index.js';
 import Pot from '../models/pot.js';
 import Transaction from '../models/transaction.js';
 import { calculateBalance } from '../utils/index.js';
+import User from '../models/user.js';
 
 const router = Router();
 
-// Get All
+// --------- Get All
 router.get('/', async (req, res) => {
   const userFromToken = req.user!;
 
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
   res.send(pots);
 });
 
-// Get one
+// --------- Get one
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
   const userFromToken = req.user!;
@@ -34,11 +35,20 @@ router.get('/:id', async (req, res) => {
 });
 
 // --------- Create new
-router.post('/', newPotParser, async (req: Request<{}, {}, PotModel>, res: Response) => {
+router.post('/', newPotParser, async (req: Request<{}, {}, PotInput>, res: Response) => {
   const userFromToken = req.user!;
 
-  const newPot = new Pot({ ...req.body, total: 0, userId: userFromToken.userId });
-  await newPot.save();
+  const newPotData: PotModel = { ...req.body, total: 0, userId: userFromToken.userId };
+  const newPot = new Pot(newPotData);
+  const savedPot = await newPot.save();
+
+  const owner = await User.findById(userFromToken.userId);
+  if (!owner) {
+    return res.status(500).json({ error: 'Unexpected error finding user' });
+  }
+
+  owner.pots.push(savedPot.id);
+  await owner.save();
 
   res.status(201).send(newPot);
 });

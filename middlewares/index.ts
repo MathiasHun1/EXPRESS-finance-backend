@@ -39,7 +39,6 @@ export const budgetParser = (req: Request, res: Response, next: NextFunction) =>
     category: z.string(),
     maximum: z.number().min(0),
     theme: z.string(),
-    userId: z.string(),
   });
 
   try {
@@ -58,7 +57,6 @@ export const transactionsParser = (req: Request, res: Response, next: NextFuncti
     category: z.string(),
     amount: z.number(),
     recurring: z.boolean(),
-    userId: z.string(),
   });
 
   try {
