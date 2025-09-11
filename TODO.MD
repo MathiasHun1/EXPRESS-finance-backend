@@ -64,6 +64,14 @@ Balance
 - Integration tests for transactions route ✅
 - Integration tests for pots route ✅
 - Integration tests for balance route
-- implement token based authentication
+- implement token based authentication for all routes: budgts, pots, transactions ✅
+- implement auth guard middleware to protect routes ✅
+- Work on banalce route, its not done yet ‼️
 
 ‼️ Tesztekben ellenőrizni az error üzeneteteket is ??
+
+# Helyzet:
+
+A fő route-ok kész vannak, token auth is megvan rajtuk, védettek.
+Be kell fejezni a budgets route-ot, kijavítani a teszteket a transactions és a budgets route-hoz. Regisztrációt implementálni.
+Eldönteni hogy aggregált adatot használjunk a frontenden, vagy külön-külön fetcheljük a pots, budgets és transactions adatokat.
