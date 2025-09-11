@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "dev": "NODE_ENV=test tsx --watch ./index.ts",
     "start": " tsx ./index.ts",
-    "test": "NODE_ENV=test node --import tsx --test tests/budgets.api.test.ts"
+    "test": "NODE_ENV=test node --import tsx --test tests/pots.api.test.ts"
   },
   "keywords": [],
   "author": "",

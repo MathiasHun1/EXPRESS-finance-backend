@@ -60,4 +60,10 @@ Balance
 - Add error handling ✅
 - Add validation ✅
 - Add logging ✅
-- Integration tests for routes: budgets, pots
+- Integration tests for budgets route ✅
+- Integration tests for transactions route ✅
+- Integration tests for pots route
+- Integration tests for balance route
+- implement token based authentication
+
+‼️ Tesztekben ellenőrizni az error üzeneteteket is ??

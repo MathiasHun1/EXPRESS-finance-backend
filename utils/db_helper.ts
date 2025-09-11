@@ -85,7 +85,7 @@ const initialTransactions = [
     name: 'Emma Richardson',
     category: 'General',
     date: '2024-08-19T14:23:11Z',
-    amount: 75.5,
+    amount: 2800.5,
     recurring: false,
   },
   {

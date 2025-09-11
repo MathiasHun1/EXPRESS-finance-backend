@@ -38,6 +38,7 @@ router.post('/', newPotParser, async (req: Request<unknown, unknown, PotModel>, 
 
 router.put('/:id', updatedPotParser, async (req: Request<{ id: string }, unknown, PotModel>, res: any) => {
   const id = req.params.id;
+
   const oldData = await Pot.findById(id);
   const updatedData = req.body;
 

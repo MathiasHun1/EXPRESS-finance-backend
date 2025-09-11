@@ -25,6 +25,7 @@ export const updatedPotParser = (req: Request, res: Response, next: NextFunction
     target: z.number().min(0),
     theme: z.string(),
     total: z.number(),
+    userId: z.string(),
   });
 
   try {
