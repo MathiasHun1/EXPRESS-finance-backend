@@ -12,7 +12,7 @@ export interface TransactionModel {
   avatar: string;
   name: string;
   category: string;
-  date: Date;
+  date: Date | string;
   amount: number;
   recurring: boolean;
   userId: Types.ObjectId;
@@ -38,3 +38,7 @@ export interface UserModel {
   budgets: string[];
   pots: string[];
 }
+
+export type PotInput = Omit<PotModel, 'userId'>;
+export type TransactionInput = Omit<TransactionModel, 'userId'>;
+export type BudgetInput = Omit<BudgetModel, 'userId'>;

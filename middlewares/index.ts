@@ -1,14 +1,13 @@
 import type { NextFunction, Request, Response } from 'express';
 import { Error as MongooseError } from 'mongoose';
 import * as z from 'zod';
-import type { BudgetModel, TransactionModel } from '../types/index.js';
+import jwt from 'jsonwebtoken';
 
 export const newPotParser = (req: Request, res: Response, next: NextFunction) => {
   const potSchema = z.object({
     name: z.string(),
     target: z.number().min(0),
     theme: z.string(),
-    userId: z.string(),
   });
 
   try {
@@ -25,7 +24,6 @@ export const updatedPotParser = (req: Request, res: Response, next: NextFunction
     target: z.number().min(0),
     theme: z.string(),
     total: z.number(),
-    userId: z.string(),
   });
 
   try {
@@ -107,4 +105,21 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
   }
 
   next();
+};
+
+export const userExtractor = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.get('Authorization');
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.replace('Bearer ', '') : null;
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token missing' });
+  }
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_KEY as string);
+    req.user = user as { username: string; userId: string };
+    next();
+  } catch (error) {
+    next(error);
+  }
 };

@@ -11,7 +11,7 @@ import bcrypt from 'bcrypt';
 const api = supertest(app);
 
 describe('testing transaction routes', () => {
-  const initialData = dbHelper.initialTransactions;
+  const initialData = dbHelper.transactions_1;
   const newTrans = {
     avatar: './assets/images/avatars/liam-hughes.jpg',
     name: 'Liam Hughes',

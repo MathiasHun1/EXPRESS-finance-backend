@@ -7,46 +7,62 @@ import { calculateBalance } from '../utils/index.js';
 
 const router = Router();
 
+// Get All
 router.get('/', async (req, res) => {
-  const pots = await Pot.find({});
+  const userFromToken = req.user!;
+
+  const pots = await Pot.find({ userId: userFromToken.userId });
   res.send(pots);
 });
 
+// Get one
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
+  const userFromToken = req.user!;
 
   const pot = await Pot.findById(id);
 
   if (!pot) {
     return res.status(404).json({ error: 'Pot not found' });
   }
+
+  if (pot.userId.toString() !== userFromToken.userId) {
+    return res.status(403).json({ error: 'unauthorized' });
+  }
+
   res.json(pot);
 });
 
-router.post('/', newPotParser, async (req: Request<unknown, unknown, PotModel>, res: Response) => {
-  const userId = req.body.userId;
+// --------- Create new
+router.post('/', newPotParser, async (req: Request<{}, {}, PotModel>, res: Response) => {
+  const userFromToken = req.user!;
 
-  if (!userId) {
-    return res.status(400).json({ error: 'User Id missing!' });
-  }
-
-  const newPot = new Pot({ ...req.body, total: 0 });
+  const newPot = new Pot({ ...req.body, total: 0, userId: userFromToken.userId });
   await newPot.save();
 
   res.status(201).send(newPot);
 });
 
+// ---------- Update one
 router.put('/:id', updatedPotParser, async (req: Request<{ id: string }, unknown, PotModel>, res: any) => {
   const id = req.params.id;
+  const userFromToken = req.user!;
 
   const oldData = await Pot.findById(id);
-  const updatedData = req.body;
+  if (!oldData) {
+    return res.status(404).json({ error: 'Pot not found' });
+  }
 
-  const transactions = await Transaction.find({});
-  const pots = await Pot.find({});
+  if (oldData.userId.toString() !== userFromToken.userId) {
+    return res.status(403).json({ error: 'unauthorized' });
+  }
+
+  const updatedData = req.body;
+  const transactions = await Transaction.find({ userId: userFromToken.userId });
+  const pots = await Pot.find({ userId: userFromToken.userId });
   const balance = calculateBalance(transactions, pots);
 
-  // check if user have enough balance for operation
+  /* check if user have enough balance for the operation */
   let amount: number = 0;
 
   if (oldData && updatedData) {
@@ -61,8 +77,20 @@ router.put('/:id', updatedPotParser, async (req: Request<{ id: string }, unknown
   res.status(201).send(updatedPot);
 });
 
+// -------- Delete one
 router.delete('/:id', async (req, res) => {
   const id = req.params.id;
+  const userFromToken = req.user!;
+
+  const pot = await Pot.findById(id);
+  if (!pot) {
+    return res.status(404).json({ error: 'Not found' });
+  }
+
+  if (pot.userId.toString() !== userFromToken.userId) {
+    return res.status(403).json({ error: 'unauthorized' });
+  }
+
   await Pot.findByIdAndDelete(id);
 
   res.status(204).send();
