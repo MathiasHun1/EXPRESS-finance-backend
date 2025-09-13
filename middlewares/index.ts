@@ -97,6 +97,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
 
 export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   console.log('METHOD: ', req.method);
+  console.log('Headers:', req.headers);
 
   if (req.body) {
     console.log('BODY: ', req.body);

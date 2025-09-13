@@ -265,6 +265,7 @@ const pots_2 = [
 export default {
   clearDb,
   loadTestData,
+  creataDataForUser,
   transactions_1,
   users,
 };
