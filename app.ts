@@ -25,7 +25,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'development') {
   app.use(requestLogger);
 }
 
@@ -39,7 +39,7 @@ app.use('/users', usersRouter);
 app.use('/transactions', userExtractor, transactionsRouter);
 app.use('/budgets', userExtractor, budgetsRouter);
 app.use('/pots', userExtractor, potsRouter);
-app.use('/balance', balanceRouter);
+app.use('/balance', userExtractor, balanceRouter);
 app.use(errorHandler);
 
 export default app;

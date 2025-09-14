@@ -10,6 +10,8 @@ const router = Router();
 router.get('/', async (req, res) => {
   const userFromToken = req.user!;
 
+  console.log(userFromToken);
+
   const data = await Budget.find({ userId: userFromToken.userId });
   res.json(data);
 });

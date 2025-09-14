@@ -22,6 +22,17 @@ router.get('/:id', async (req, res) => {
 router.post('/', newUserParser, async (req: Request<unknown, unknown, { username: string; password: string }>, res: Response) => {
   const { username, password } = req.body;
 
+  const userExist = await User.findOne({ username });
+  console.log(userExist);
+
+  if (userExist) {
+    return res.status(409).json({ error: 'username already exists!' });
+  }
+  // --- TODO: PreCheck username ? --- //
+
+  // --- TODO: Add email field to user --- //
+
+  // --- TODO: Password validation --- //
   const passwordHash = await bcrypt.hash(password, 10);
 
   const newUser = new User({
@@ -32,8 +43,9 @@ router.post('/', newUserParser, async (req: Request<unknown, unknown, { username
     budgets: [],
   });
 
-  const result = await newUser.save();
-  res.status(201).send(result);
+  const createdUser = await newUser.save();
+
+  res.status(201).send(createdUser);
 });
 
 export default router;
