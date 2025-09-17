@@ -7,12 +7,16 @@ import Transaction from '../models/transaction.js';
 import mongoose from 'mongoose';
 import User from '../models/user.js';
 import bcrypt from 'bcrypt';
+import { getTestToken } from '../utils/test_helpers.js';
 
 const api = supertest(app);
 
-describe('testing transaction routes', () => {
-  const initialData = dbHelper.transactions_1;
-  const newTrans = {
+describe('testing transaction routes', async () => {
+  let token: string;
+  let user: any;
+  let initialTransactions: any;
+
+  const newTransaction = {
     avatar: './assets/images/avatars/liam-hughes.jpg',
     name: 'Liam Hughes',
     category: 'Groceries',
@@ -22,76 +26,62 @@ describe('testing transaction routes', () => {
   };
 
   beforeEach(async () => {
-    await dbHelper.clearDb(); // erase all data
+    // Reset Db state
+    await dbHelper.clearDb();
+    await dbHelper.loadTestData();
 
-    // save a new user and get its Id
-    const passwordHash = await bcrypt.hash('valami', 10);
-    const newUser = new User({
-      username: 'Bela',
-      passwordHash: passwordHash,
-      pots: [],
-      budgets: [],
-      transactions: [],
-    });
-    const savedUser = await newUser.save();
-
-    const initialDataPromises = initialData.map((trans) => {
-      const transaction = new Transaction({ ...trans, userId: savedUser.id });
-      return transaction.save();
-    });
-
-    await Promise.all(initialDataPromises);
+    // Get an user
+    user = await User.findOne();
+    initialTransactions = await Transaction.find({ userId: user._id });
+    token = getTestToken(user!.username, user!._id.toString());
   });
 
   test('Returns all transactions from db', async () => {
     const result = await api
       .get('/transactions')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-type', /application\/json/);
 
-    assert.equal(result.body.length, initialData.length);
+    assert.equal(result.body.length, initialTransactions.length);
   });
 
-  test('Adds a new transaction succesfully', async () => {
-    const dataAtStart = await Transaction.find({});
+  test('Adds a new transaction succesfully and returns a correct object', async () => {
+    const newTransaction = {
+      avatar: './assets/images/avatars/liam-hughes.jpg',
+      name: 'Liam Hughes',
+      category: 'Groceries',
+      amount: 65.75,
+      recurring: false,
+      userId: user._id,
+    };
 
-    const user = await User.findOne({});
-    const newTransaction = { ...newTrans, userId: user!.id };
+    const result = await api.post('/transactions').set('Authorization', `Bearer ${token}`).send(newTransaction).expect(201);
+    const dataAtEnd = await Transaction.find({ userId: user._id });
 
-    await api.post('/transactions').send(newTransaction).expect(201);
-    const dataAtEnd = await Transaction.find({});
-
-    assert.strictEqual(dataAtStart.length + 1, dataAtEnd.length);
+    assert.strictEqual(initialTransactions.length + 1, dataAtEnd.length);
+    assert.ok(result.body.hasOwnProperty('date'));
   });
 
-  test('fails adding a transaction without user Id', async () => {
-    const wrongData = newTrans;
-    await api.post('/transactions').send(wrongData).expect(400);
-  });
+  test('fails adding a transaction without wrong data types', async () => {
+    const wrongData = { ...newTransaction, name: undefined };
+    const wrongData2 = { ...newTransaction, amount: '300' };
 
-  test('fails adding a transaction without name field', async () => {
-    const wrongData = { ...newTrans, name: undefined };
-    const wrongData2 = { ...newTrans, amount: '300' };
-    const dataAtStart = await Transaction.find({});
+    await api.post('/transactions').set('Authorization', `Bearer ${token}`).send(wrongData).expect(400);
+    await api.post('/transactions').set('Authorization', `Bearer ${token}`).send(wrongData2).expect(400);
 
-    await api.post('/transactions').send(wrongData).expect(400);
-    await api.post('/transactions').send(wrongData2).expect(400);
-    const dataAtEnd = await Transaction.find({});
+    const dataAtEnd = await Transaction.find({ userId: user._id });
 
-    assert.strictEqual(dataAtStart.length, dataAtEnd.length);
+    assert.strictEqual(initialTransactions.length, dataAtEnd.length);
   });
 
   test("posted transaction's Id sucessfully added to the user", async () => {
-    const userAtStart = await User.findOne({});
+    const result = await api.post('/transactions').set('Authorization', `Bearer ${token}`).send(newTransaction).expect(201);
 
-    const userId = userAtStart!.id;
-    const newTransaction = { ...newTrans, userId: userId };
-
-    const result = await api.post('/transactions').send(newTransaction).expect(201);
     const savedTransactionId = result.body.id;
-    const userAtEnd = await User.findById(userId);
+    const updatedUser = await User.findById(user._id);
 
-    assert.ok(userAtEnd!.transactions.includes(savedTransactionId));
+    assert.ok(updatedUser!.transactions.includes(savedTransactionId));
   });
 
   after(async () => {
