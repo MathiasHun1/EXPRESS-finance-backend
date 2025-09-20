@@ -25,3 +25,20 @@ export const calculateBalance = (transactions: TransactionModel[], pots: PotMode
     current: income - expenses - moneyInPots,
   };
 };
+
+export const transFormExampleTransactions = (transactions: TransactionModel[]) => {
+  return transactions.map((tr) => {
+    const month = new Date(tr.date).getMonth();
+    const currentMonth = new Date().getMonth();
+
+    if (month === 7) {
+      const newDate = new Date(tr.date);
+      newDate.setMonth(currentMonth);
+      return {
+        ...tr,
+        date: newDate,
+      };
+    }
+    return tr;
+  });
+};

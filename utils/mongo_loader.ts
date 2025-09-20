@@ -7,7 +7,7 @@ dotenv.config();
 
 const loadExapmleData = async () => {
   const user = {
-    username: 'Lajos',
+    username: 'ExampleUser',
     password: 'valami',
   };
 

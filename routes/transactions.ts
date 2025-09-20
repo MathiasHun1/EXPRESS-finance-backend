@@ -3,13 +3,23 @@ import { transactionsParser } from '../middlewares/index.js';
 import type { TransactionInput, TransactionModel } from '../types/index.js';
 import Transaction from '../models/transaction.js';
 import User from '../models/user.js';
+import { transFormExampleTransactions } from '../utils/index.js';
 
 const router = Router();
 
 // --------- Get All
 router.get('/', async (req, res) => {
   const userFromToken = req.user!;
-  const transactions = await Transaction.find({ userId: userFromToken.userId });
+  const transactions = await Transaction.find({ userId: userFromToken.userId }).lean();
+  console.log(transactions[0]);
+
+  //trnasfrom dates if user is example user
+  if (userFromToken.username === 'ExampleUser') {
+    const transformed = transFormExampleTransactions(transactions);
+    console.log('TRANSFORMED: ', transformed[0]);
+
+    return res.send(transFormExampleTransactions(transactions));
+  }
 
   res.send(transactions);
 });
