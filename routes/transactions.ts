@@ -23,21 +23,21 @@ router.get('/', async (req, res) => {
 });
 
 // --------- Get one
-router.get('/:id', async (req, res) => {
-  const id = req.params.id;
-  const userFromToken = req.user!;
+// router.get('/:id', async (req, res) => {
+//   const id = req.params.id;
+//   const userFromToken = req.user!;
 
-  const transaction = await Transaction.findById(id);
-  if (!transaction) {
-    return res.status(404).json({ error: 'Pot not found' });
-  }
+//   const transaction = await Transaction.findById(id);
+//   if (!transaction) {
+//     return res.status(404).json({ error: 'Pot not found' });
+//   }
 
-  if (transaction.userId.toString() !== userFromToken.userId) {
-    return res.status(403).json({ error: 'unauthorized' });
-  }
+//   if (transaction.userId.toString() !== userFromToken.userId) {
+//     return res.status(403).json({ error: 'unauthorized' });
+//   }
 
-  res.send(transaction);
-});
+//   res.send(transaction);
+// });
 
 // --------- Create new
 router.post('/', transactionsParser, async (req: Request<{}, {}, TransactionInput>, res: Response) => {

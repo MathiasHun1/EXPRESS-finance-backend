@@ -28,11 +28,15 @@ router.post('/', newUserParser, async (req: Request<unknown, unknown, { username
   if (userExist) {
     return res.status(409).json({ error: 'username already exists!' });
   }
-  // --- TODO: PreCheck username ? --- //
 
   // --- TODO: Add email field to user --- //
 
-  // --- TODO: Password validation --- //
+  // Password validation --- //
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+  if (!regex.test(password)) {
+    return res.status(400).json({ error: 'invalid password format' });
+  }
+
   const passwordHash = await bcrypt.hash(password, 10);
 
   const newUser = new User({
