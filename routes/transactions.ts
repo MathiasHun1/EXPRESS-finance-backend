@@ -10,15 +10,13 @@ const router = Router();
 // --------- Get All
 router.get('/', async (req, res) => {
   const userFromToken = req.user!;
-  const transactions = await Transaction.find({ userId: userFromToken.userId }).lean();
-  console.log(transactions[0]);
+  const transactions = await Transaction.find({ userId: userFromToken.userId });
 
   //trnasfrom dates if user is example user
   if (userFromToken.username === 'ExampleUser') {
-    const transformed = transFormExampleTransactions(transactions);
-    console.log('TRANSFORMED: ', transformed[0]);
-
-    return res.send(transFormExampleTransactions(transactions));
+    const plain = transactions.map((t) => t.toJSON());
+    const transformed = transFormExampleTransactions(plain);
+    return res.send(transFormExampleTransactions(transformed));
   }
 
   res.send(transactions);
