@@ -9,6 +9,7 @@ import potsRouter from './routes/pots.js';
 import usersRouter from './routes/users.js';
 import balanceRouter from './routes/balance.js';
 import loginRouter from './routes/login.js';
+import verifyRouter from './routes/verify_email.js';
 
 console.log('Environment: ', process.env.NODE_ENV);
 
@@ -35,6 +36,7 @@ app.get('/ping', (req, res) => {
 });
 
 app.use('/login', loginRouter);
+app.use('/verify-email', verifyRouter);
 app.use('/users', usersRouter);
 app.use('/transactions', userExtractor, transactionsRouter);
 app.use('/budgets', userExtractor, budgetsRouter);

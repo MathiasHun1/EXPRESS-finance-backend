@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt';
 interface PlainUser {
   username: string;
   password: string;
+  email: string;
 }
 
 const clearDb = async () => {
@@ -28,6 +29,8 @@ const creataDataForUser = async (user: PlainUser, transactions: TransactionInput
   const userAtStart = new User({
     username: user.username,
     passwordHash,
+    email: user.email,
+    isVerified: true,
   });
 
   const savedUser = await userAtStart.save();
@@ -80,10 +83,12 @@ const users = [
   {
     username: 'Kata',
     password: 'traktor',
+    email: 'kata@hotmail.com',
   },
   {
     username: 'Lajos',
     password: 'valami',
+    email: 'lajos@hotmail.com',
   },
 ];
 

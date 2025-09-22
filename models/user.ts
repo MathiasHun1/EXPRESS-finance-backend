@@ -6,6 +6,10 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   passwordHash: {
     type: String,
     required: true,
@@ -28,6 +32,10 @@ const UserSchema = new mongoose.Schema({
       ref: 'Pot',
     },
   ],
+  isVerified: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 UserSchema.set('toJSON', {

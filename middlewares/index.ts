@@ -72,6 +72,7 @@ export const newUserParser = (req: Request, res: Response, next: NextFunction) =
   const userSchema = z.object({
     username: z.string(),
     password: z.string(),
+    email: z.string(),
   });
 
   try {

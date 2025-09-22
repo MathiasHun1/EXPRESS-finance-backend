@@ -17,6 +17,10 @@ router.post('/', async (req, res) => {
     return res.status(401).json({ error: 'Invalid password!' });
   }
 
+  if (!user.isVerified) {
+    return res.status(401).json({ error: 'Account not verified yet!' });
+  }
+
   const userForToken = {
     username,
     userId: user._id,

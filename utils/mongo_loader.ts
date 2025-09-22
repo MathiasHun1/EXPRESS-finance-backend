@@ -9,6 +9,8 @@ const loadExapmleData = async () => {
   const user = {
     username: 'ExampleUser',
     password: 'valami',
+    email: 'exampleEmail@hotmail.com',
+    isVerified: true,
   };
 
   const rawData = fs.readFileSync('../data.json');
