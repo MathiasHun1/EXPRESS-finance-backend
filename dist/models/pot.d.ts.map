@@ -1,1 +1,1 @@
-{"version":3,"file":"pot.d.ts","sourceRoot":"","sources":["../../models/pot.ts"],"names":[],"mappings":"AAAA,OAAO,QAAQ,MAAM,UAAU,CAAC;AAChC,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,mBAAmB,CAAC;AAiClD,QAAA,MAAM,GAAG;;;;;;;;;;;;GAAmC,CAAC;AAE7C,eAAe,GAAG,CAAC"}
+{"version":3,"file":"pot.d.ts","sourceRoot":"","sources":["../../models/pot.ts"],"names":[],"mappings":"AAAA,OAAO,QAAQ,MAAM,UAAU,CAAC;AAsChC,QAAA,MAAM,GAAG;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;GAAmC,CAAC;AAE7C,eAAe,GAAG,CAAC"}

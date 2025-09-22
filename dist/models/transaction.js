@@ -24,6 +24,10 @@ const transactionSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+    },
 });
 transactionSchema.set('toJSON', {
     transform: (document, returnedObj) => {

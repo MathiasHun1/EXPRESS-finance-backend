@@ -1,0 +1,48 @@
+import mongoose from 'mongoose';
+const UserSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    passwordHash: {
+        type: String,
+        required: true,
+    },
+    transactions: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Transaction',
+        },
+    ],
+    budgets: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Budget',
+        },
+    ],
+    pots: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Pot',
+        },
+    ],
+    isVerified: {
+        type: Boolean,
+        required: true,
+    },
+});
+UserSchema.set('toJSON', {
+    transform: (doc, returnedObj) => {
+        (returnedObj.id = returnedObj._id), delete returnedObj._id;
+        delete returnedObj.__v;
+        delete returnedObj.passwordHash;
+    },
+});
+const User = mongoose.model('User', UserSchema);
+export default User;
+//# sourceMappingURL=user.js.map

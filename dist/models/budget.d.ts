@@ -3,14 +3,17 @@ declare const Budget: mongoose.Model<{
     theme: string;
     category: string;
     maximum: number;
+    userId: mongoose.Types.ObjectId;
 }, {}, {}, {}, mongoose.Document<unknown, {}, {
     theme: string;
     category: string;
     maximum: number;
+    userId: mongoose.Types.ObjectId;
 }, {}, mongoose.DefaultSchemaOptions> & {
     theme: string;
     category: string;
     maximum: number;
+    userId: mongoose.Types.ObjectId;
 } & {
     _id: mongoose.Types.ObjectId;
 } & {
@@ -19,14 +22,17 @@ declare const Budget: mongoose.Model<{
     theme: string;
     category: string;
     maximum: number;
+    userId: mongoose.Types.ObjectId;
 }, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
     theme: string;
     category: string;
     maximum: number;
+    userId: mongoose.Types.ObjectId;
 }>, {}, mongoose.ResolveSchemaOptions<mongoose.DefaultSchemaOptions>> & mongoose.FlatRecord<{
     theme: string;
     category: string;
     maximum: number;
+    userId: mongoose.Types.ObjectId;
 }> & {
     _id: mongoose.Types.ObjectId;
 } & {

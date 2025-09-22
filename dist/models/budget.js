@@ -12,6 +12,10 @@ const budgetSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+    },
 });
 budgetSchema.set('toJSON', {
     transform: (document, returnedObj) => {

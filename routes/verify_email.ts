@@ -12,7 +12,6 @@ router.get('/', async (req, res) => {
   }
 
   const { userId, email } = jwt.verify(token, process.env.JWT_EMAIL_KEY as string) as { userId: string; email: string };
-
   const user = await User.findOne({ email });
 
   if (!user) {

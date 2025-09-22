@@ -1,14 +1,45 @@
 import mongoose from 'mongoose';
-import type { PotModel } from '../types/index.js';
-declare const Pot: mongoose.Model<PotModel, {}, {}, {}, mongoose.Document<unknown, {}, PotModel, {}, mongoose.DefaultSchemaOptions> & PotModel & {
+declare const Pot: mongoose.Model<{
+    name: string;
+    target: number;
+    theme: string;
+    total: number;
+    userId: mongoose.Types.ObjectId;
+}, {}, {}, {}, mongoose.Document<unknown, {}, {
+    name: string;
+    target: number;
+    theme: string;
+    total: number;
+    userId: mongoose.Types.ObjectId;
+}, {}, mongoose.DefaultSchemaOptions> & {
+    name: string;
+    target: number;
+    theme: string;
+    total: number;
+    userId: mongoose.Types.ObjectId;
+} & {
     _id: mongoose.Types.ObjectId;
 } & {
     __v: number;
-}, mongoose.Schema<PotModel, mongoose.Model<PotModel, any, any, any, mongoose.Document<unknown, any, PotModel, any, {}> & PotModel & {
-    _id: mongoose.Types.ObjectId;
-} & {
-    __v: number;
-}, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, PotModel, mongoose.Document<unknown, {}, mongoose.FlatRecord<PotModel>, {}, mongoose.ResolveSchemaOptions<mongoose.DefaultSchemaOptions>> & mongoose.FlatRecord<PotModel> & {
+}, mongoose.Schema<any, mongoose.Model<any, any, any, any, any, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, {
+    name: string;
+    target: number;
+    theme: string;
+    total: number;
+    userId: mongoose.Types.ObjectId;
+}, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
+    name: string;
+    target: number;
+    theme: string;
+    total: number;
+    userId: mongoose.Types.ObjectId;
+}>, {}, mongoose.ResolveSchemaOptions<mongoose.DefaultSchemaOptions>> & mongoose.FlatRecord<{
+    name: string;
+    target: number;
+    theme: string;
+    total: number;
+    userId: mongoose.Types.ObjectId;
+}> & {
     _id: mongoose.Types.ObjectId;
 } & {
     __v: number;

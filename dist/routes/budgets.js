@@ -1,34 +1,69 @@
 import { Router } from 'express';
 import { budgetParser } from '../middlewares/index.js';
 import Budget from '../models/budget.js';
+import User from '../models/user.js';
 const router = Router();
+// Get All
 router.get('/', async (req, res) => {
-    const data = await Budget.find({});
+    const userFromToken = req.user;
+    console.log(userFromToken);
+    const data = await Budget.find({ userId: userFromToken.userId });
     res.json(data);
 });
+// Get one
 router.get('/:id', async (req, res) => {
-    const { id } = req.params;
+    const id = req.params.id;
+    const userFromToken = req.user;
     const budget = await Budget.findById(id);
     if (!budget) {
         return res.status(404).json({ error: 'Budget not found' });
     }
+    if (budget.userId.toString() !== userFromToken.userId) {
+        return res.status(403).json({ error: 'unauthorized' });
+    }
     res.send(budget);
 });
+// --------- Create new
 router.post('/', budgetParser, async (req, res) => {
-    const newBudget = new Budget(req.body);
-    const result = await newBudget.save();
-    res.status(201).json(result);
+    const userFromToken = req.user;
+    const newBudget = new Budget({ ...req.body, userId: userFromToken.userId });
+    const savedBudget = await newBudget.save();
+    const owner = await User.findById(userFromToken.userId);
+    if (!owner) {
+        return res.status(500).json({ error: 'Unexpected error finding user' });
+    }
+    owner.budgets.push(savedBudget.id);
+    await owner.save();
+    res.status(201).json(savedBudget);
 });
+// -------- Delete one
 router.delete('/:id', async (req, res) => {
     const id = req.params.id;
+    const userFromToken = req.user;
+    const budget = await Budget.findById(id);
+    if (!budget) {
+        return res.status(404).json({ error: 'Budget not found' });
+    }
+    if (budget.userId.toString() !== userFromToken.userId) {
+        return res.status(403).json({ error: 'unauthorized' });
+    }
     await Budget.findByIdAndDelete(id);
     res.status(204).send();
 });
-router.put('/:id', async (req, res) => {
-    const { id } = req.params;
+// ---------- Update one
+router.put('/:id', budgetParser, async (req, res) => {
+    const id = req.params.id;
+    const userFromToken = req.user;
     const updatedBudget = req.body;
-    await Budget.findByIdAndUpdate(id, updatedBudget, { returnDocument: 'after' });
-    res.json(updatedBudget);
+    const budget = await Budget.findById(id);
+    if (!budget) {
+        return res.status(404).json({ error: 'Budget not found' });
+    }
+    if (budget.userId.toString() !== userFromToken.userId) {
+        return res.status(403).json({ error: 'unauthorized' });
+    }
+    const returnedBudget = await Budget.findByIdAndUpdate(id, { ...updatedBudget, id }, { returnDocument: 'after' });
+    res.status(201).send(returnedBudget);
 });
 export default router;
 //# sourceMappingURL=budgets.js.map

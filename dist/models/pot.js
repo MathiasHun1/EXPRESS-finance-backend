@@ -18,6 +18,10 @@ const potSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+    },
 });
 potSchema.set('toJSON', {
     transform: (document, returnedObj) => {

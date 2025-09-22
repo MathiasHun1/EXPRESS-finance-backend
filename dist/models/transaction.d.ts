@@ -5,6 +5,7 @@ declare const Transaction: mongoose.Model<{
     avatar: string;
     amount: number;
     recurring: boolean;
+    userId: mongoose.Types.ObjectId;
     date: NativeDate;
 }, {}, {}, {}, mongoose.Document<unknown, {}, {
     name: string;
@@ -12,6 +13,7 @@ declare const Transaction: mongoose.Model<{
     avatar: string;
     amount: number;
     recurring: boolean;
+    userId: mongoose.Types.ObjectId;
     date: NativeDate;
 }, {}, mongoose.DefaultSchemaOptions> & {
     name: string;
@@ -19,6 +21,7 @@ declare const Transaction: mongoose.Model<{
     avatar: string;
     amount: number;
     recurring: boolean;
+    userId: mongoose.Types.ObjectId;
     date: NativeDate;
 } & {
     _id: mongoose.Types.ObjectId;
@@ -30,6 +33,7 @@ declare const Transaction: mongoose.Model<{
     avatar: string;
     amount: number;
     recurring: boolean;
+    userId: mongoose.Types.ObjectId;
     date: NativeDate;
 }, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
     name: string;
@@ -37,6 +41,7 @@ declare const Transaction: mongoose.Model<{
     avatar: string;
     amount: number;
     recurring: boolean;
+    userId: mongoose.Types.ObjectId;
     date: NativeDate;
 }>, {}, mongoose.ResolveSchemaOptions<mongoose.DefaultSchemaOptions>> & mongoose.FlatRecord<{
     name: string;
@@ -44,6 +49,7 @@ declare const Transaction: mongoose.Model<{
     avatar: string;
     amount: number;
     recurring: boolean;
+    userId: mongoose.Types.ObjectId;
     date: NativeDate;
 }> & {
     _id: mongoose.Types.ObjectId;
