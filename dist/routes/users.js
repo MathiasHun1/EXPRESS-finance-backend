@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import User from '../models/user.js';
-import { newUserParser } from '../middlewares/index.js';
+import { newUserParser, userExtractor } from '../middlewares/index.js';
 import bcrypt from 'bcrypt';
-import nodemailer from 'nodemailer';
 import { sendVerification } from '../utils/index.js';
 import jwt from 'jsonwebtoken';
 const router = Router();
@@ -14,6 +13,15 @@ router.get('/:id', async (req, res) => {
     const id = req.params.id;
     const user = await User.findById(id).populate('transactions').populate('budgets').populate('pots');
     res.send(user);
+});
+router.delete('/', userExtractor, async (req, res) => {
+    const { username, userId } = req.user;
+    console.log('REQUEST:USER: ', username, userId);
+    if (username === 'ExampleUser') {
+        return res.status(403).send('Example user cannot be deleted');
+    }
+    await User.findByIdAndDelete(userId);
+    res.status(204).send();
 });
 router.delete('/:id', async (req, res) => {
     console.log('ID: ', req.params.id);
