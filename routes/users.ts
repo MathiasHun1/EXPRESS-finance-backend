@@ -89,14 +89,8 @@ router.post('/', newUserParser, async (req: Request<unknown, unknown, { username
     email: createdUser.email,
   };
   const emailToken = jwt.sign(userForToken, process.env.JWT_EMAIL_KEY as string, { expiresIn: '1d' });
-  try {
-    await sendVerification(email, emailToken);
-  } catch (error) {
-    console.error('error: ', error);
-    return res.status(500).send('filed to send verification email');
-  }
+  await sendVerification(email, emailToken);
 
-  // res.status(201).send(createdUser);
   res.status(200).json({ message: 'Success' });
 });
 

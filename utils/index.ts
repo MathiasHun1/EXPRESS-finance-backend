@@ -60,7 +60,7 @@ export const sendVerification = async (email: string, token?: string) => {
     },
   });
 
-  await transporter.verify();
+  await transporter.verify().catch((err) => console.error('SMTP verification failed:', err));
   console.log('Server is ready to take our messages');
 
   const serverUrl = process.env.NODE_ENV === 'development' ? process.env.SERVER_URL_DEVELOPMENT : process.env.SERVER_URL_PRODUCTION;

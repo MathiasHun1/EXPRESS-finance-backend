@@ -50,7 +50,7 @@ export const sendVerification = async (email, token) => {
             pass: process.env.SENDGRID_API_KEY,
         },
     });
-    await transporter.verify();
+    await transporter.verify().catch((err) => console.error('SMTP verification failed:', err));
     console.log('Server is ready to take our messages');
     const serverUrl = process.env.NODE_ENV === 'development' ? process.env.SERVER_URL_DEVELOPMENT : process.env.SERVER_URL_PRODUCTION;
     try {
