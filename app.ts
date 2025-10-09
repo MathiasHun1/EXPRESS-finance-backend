@@ -10,8 +10,11 @@ import usersRouter from './routes/users.js';
 import balanceRouter from './routes/balance.js';
 import loginRouter from './routes/login.js';
 import verifyRouter from './routes/verify_email.js';
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-console.log('Environment: ', process.env.NODE_ENV);
+console.log('NODE_ENV: ', process.env.NODE_ENV);
 
 try {
   console.log('Connecting to database..');
@@ -21,19 +24,9 @@ try {
   console.log('Error connecting Database!');
 }
 
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
 if (process.env.NODE_ENV === 'development') {
   app.use(requestLogger);
 }
-
-// See if the server is running
-app.get('/ping', (req, res) => {
-  res.send('pOng');
-});
 
 app.use('/login', loginRouter);
 app.use('/verify-email', verifyRouter);
