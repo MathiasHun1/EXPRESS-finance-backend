@@ -10,8 +10,15 @@ import usersRouter from './routes/users.js';
 import balanceRouter from './routes/balance.js';
 import loginRouter from './routes/login.js';
 import verifyRouter from './routes/verify_email.js';
+
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: '*',
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 console.log('NODE_ENV: ', process.env.NODE_ENV);
