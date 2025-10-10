@@ -24,9 +24,9 @@ try {
   console.log('Error connecting Database!');
 }
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(requestLogger);
-}
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(requestLogger);
+// }
 
 app.use('/login', loginRouter);
 app.use('/verify-email', verifyRouter);

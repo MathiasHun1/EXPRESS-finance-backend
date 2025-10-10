@@ -1,7 +1,7 @@
 import { email } from 'zod';
 import type { PotModel, TransactionModel } from '../types/index.js';
-import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { Resend } from 'resend';
 
 dotenv.config();
 
@@ -49,33 +49,22 @@ export const transFormExampleTransactions = (transactions: TransactionModel[]) =
 };
 
 export const sendVerification = async (email: string, token?: string) => {
-  // Create a transporter for SMTP
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
-    port: 587,
-    secure: false, // upgrade later with STARTTLS
-    auth: {
-      user: 'apikey',
-      pass: process.env.SENDGRID_API_KEY,
-    },
-  });
-
-  await transporter.verify().catch((err) => console.error('SMTP verification failed:', err));
-  console.log('Server is ready to take our messages');
-
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const serverUrl = process.env.NODE_ENV === 'development' ? process.env.SERVER_URL_DEVELOPMENT : process.env.SERVER_URL_PRODUCTION;
-  try {
-    const info = await transporter.sendMail({
-      from: 'budgetappforfree@gmail.com', // sender address
-      to: email, // list of receivers
-      subject: 'Budget app email verification', // Subject line
-      text: 'Hello world?', // plain text body
-      html: `<a href="${serverUrl}/verify-email?token=${token}">Click here to verify your email</a>`, // html body
-    });
 
-    console.log('Message sent: %s', info.messageId);
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  console.log('Runs from function body');
+
+  try {
+    console.log('Before send');
+    const response = await resend.emails.send({
+      from: 'budgetappforfree@gmail.com', // or a verified sender like you@yourdomain.com
+      to: email,
+      subject: 'Verify your email',
+      html: `<a href="${serverUrl}/verify-email?token=${token}">Click here to verify your email</a>`,
+    });
+    console.log('after send: ', response);
+    console.log('✅ Verification email sent:', email);
   } catch (err) {
-    console.error('Error while sending mail', err);
+    console.error('❌ Email send failed:', err);
   }
 };
