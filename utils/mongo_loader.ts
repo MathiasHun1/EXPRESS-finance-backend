@@ -18,7 +18,7 @@ const loadExapmleData = async () => {
   const dataObject = JSON.parse(jsonString);
   const { transactions, budgets, pots } = dataObject;
 
-  await mongoose.connect(process.env.MONGODB_URI_TEST!);
+  await mongoose.connect(process.env.MONGODB_URI_PRODUCTION!);
   await dbHelper.clearDb();
   await dbHelper.creataDataForUser(user, transactions, budgets, pots);
   await mongoose.connection.close();
