@@ -19,6 +19,7 @@ const corsOptions = {
   allowedHeaders: 'Content-Type,Authorization',
 };
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 console.log('NODE_ENV: ', process.env.NODE_ENV);
