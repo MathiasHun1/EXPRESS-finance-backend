@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import app from '../app.js';
+import app from '../index.js';
 import { test, describe, beforeEach, after } from 'node:test';
 import assert from 'node:assert';
 import dbHelper from '../utils/db_helper.js';
