@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import supertest from 'supertest';
-import app from '../app.js';
+import app from '../index.js';
 import dbHelper from '../utils/db_helper.js';
 import { test, beforeEach, describe, after } from 'node:test';
 import assert from 'node:assert';
