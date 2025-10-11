@@ -12,14 +12,13 @@ import loginRouter from './routes/login.js';
 import verifyRouter from './routes/verify_email.js';
 
 const app = express();
-const corsOptions = {
-  origin: '*',
-  credentials: true,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  allowedHeaders: 'Content-Type,Authorization',
-};
-app.use(cors(corsOptions));
-// app.options('*', cors(corsOptions));
+// const corsOptions = {
+//   origin: '*',
+//   credentials: true,
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+//   allowedHeaders: 'Content-Type,Authorization',
+// };
+app.use(cors());
 app.use(express.json());
 
 console.log('NODE_ENV: ', process.env.NODE_ENV);
