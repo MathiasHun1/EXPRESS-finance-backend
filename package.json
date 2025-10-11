@@ -24,9 +24,11 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.96",
     "@types/nodemailer": "^7.0.1",
+    "@types/sendgrid": "^2.0.31",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "cross-env": "^10.0.0",
